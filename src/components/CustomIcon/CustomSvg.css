@@ -1,0 +1,9 @@
+.custom-icon{
+    height: auto;
+    display: inline-block;
+}
+
+.custom-icon img{
+     width: 100%; 
+     height: auto
+}

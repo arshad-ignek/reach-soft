@@ -1,0 +1,148 @@
+@import url(../../variables.css);
+
+.inputContainer {
+  position: relative;
+  height: 45px;
+}
+.placeHolder::placeholder {
+  color: var(--custom-light-color) !important;
+  opacity: 20 !important;
+  visibility: visible !important;
+}
+.inputContainer .form-control::placeholder {
+  color: transparent;
+  opacity: 0;
+  visibility: hidden;
+}
+.inputContainer .form-control {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 16px;
+  padding: 6px 20px;
+  outline: none;
+  background: none;
+  z-index: 1;
+  color: var(--black);
+  font-weight: 400;
+  font-size: 14px;
+}
+.form-control:focus,
+.form-control.focus {
+  box-shadow: none !important;
+  background: transparent;
+}
+.inputContainer .form-control:-ms-input-placeholder {
+  color: transparent;
+}
+
+.inputContainer .form-control::-ms-input-placeholder {
+  color: transparent;
+}
+
+.inputContainer .floatLabel {
+  position: absolute;
+  top: 12px;
+  left: 15px;
+  padding: 0 4px;
+  color: var(--custom-light-color);
+  font-size: 12px;
+  transition: 0.5s;
+  /* z-index: 0; */
+  background: white;
+  z-index: 1;
+}
+
+.inputContainer .floatLabel span {
+  color: var(--error-color);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background: transparent ;
+  bottom: 0;
+  color: transparent ;
+  cursor: pointer;
+  height: auto;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
+}
+input[type="date"]::-webkit-clear-button {
+  background: transparent;
+}
+input[type="date"]::-webkit-inner-spin-button {
+  background: transparent;
+}
+
+.inputContainer .form-control:focus + .floatLabel {
+  top: -10px;
+  left: 15px;
+  z-index: 10;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--dark-blue);
+  background-color: var(--white);
+}
+
+.inputContainer .form-control:focus {
+  border: 1px solid var(--dark-blue);
+}
+
+.inputContainer .form-control:not(:placeholder-shown) + .floatLabel {
+  top: -10px;
+  left: 15px;
+  z-index: 10;
+  font-size: 12px;
+  font-weight: 400;
+  background: var(--white);
+}
+.inputContainer .form-control:not(:placeholder-shown) + .floatLabel:focus {
+  color: var(--dark-blue);
+}
+.inputContainer.inValid .form-control {
+  border-color: var(--error-color);
+}
+.is-danger {
+  font-size: 12px;
+  margin-left: 12px;
+  display: block;
+  margin-top: 6px;
+}
+
+.inputContainer.inValid .form-control + .floatLabel,
+.is-danger {
+  color: var(--error-color);
+}
+
+.extra-email-wrap {
+  position: relative;
+}
+
+.extra-email-wrap .remove-close {
+  position: absolute;
+  right: -35px;
+  top: 10px;
+}
+
+@media (max-width: 576px) {
+  .extra-email-wrap .remove-close {
+    right: 15px;
+    z-index: 1;
+  }
+}
+
+input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}

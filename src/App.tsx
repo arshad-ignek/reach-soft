@@ -2,7 +2,7 @@ import Login from "./Login/Login";
 
 function App() {
   return (
-    <div className="custom-login-page">
+    <div className="d-flex justify-content-center align-items-center custom-login-page">
       <Login />
     </div>
   );

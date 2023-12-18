@@ -1,3 +1,4 @@
+@import url(../../variables.css);
 
 .custom-btn {
   width: auto;
@@ -12,8 +13,8 @@
 .custom-btn.btn-primary:focus,
 .custom-btn.focus.btn-primary,
 .custom-btn.btn-primary:active {
-  background: #144b8d;
-  color: #ffffff;
+  background: var(--dark-blue);
+  color: var(--white);
 }
 .custom-btn.btn-secondary,
 .custom-btn.btn-secondary:hover,
@@ -21,13 +22,13 @@
 .custom-btn.focus.btn-secondary,
 .custom-btn.btn-secondary:active {
   background: var(--border-color);
-  color: #144b8d;
+  color: var(--dark-blue);
 }
 
 .custom-btn.btn-danger,
 .custom-btn.btn-danger:hover {
-  background: #dd7878;
-  color: #ffffff;
+  background: var(--delete-color);
+  color: var(--white);
 }
 .custom-btn:disabled{
 cursor: not-allowed;}

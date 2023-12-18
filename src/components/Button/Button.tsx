@@ -5,7 +5,7 @@ interface ButtonProps {
   styleType: string;
   otherClass?: string;
   onClick: MouseEventHandler<HTMLButtonElement>;
-  label: string;
+  label: any;
   type?: 'button' | 'submit' | 'reset';
   style?: React.CSSProperties;
   disable?: boolean;
