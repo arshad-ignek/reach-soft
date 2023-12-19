@@ -1,9 +1,22 @@
 import Login from "./Login/Login";
+import routes from "./routes/routes";
+import {BrowserRouter, Route, Routes} from "react-router-dom"
 
 function App() {
   return (
     <div className="d-flex justify-content-center align-items-center custom-login-page">
-      <Login />
+     <BrowserRouter>
+      <Routes>
+      {routes.map((route, index) => (
+          <Route
+            key={index}
+            path={route.path}
+            Component={route.component}
+           
+          />
+        ))}
+      </Routes>
+      </BrowserRouter>
     </div>
   );
 }
