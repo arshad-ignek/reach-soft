@@ -1,108 +1,99 @@
-import { Form, Formik } from 'formik';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import Button from '../components/Button/Button';
 import { CloseIcon } from '../components/CustomIcon/CustomIcon';
 import { useNavigate } from 'react-router-dom';
 import Input from '../components/Input/Input';
 
-
 const Login = () => {
-    const navigate = useNavigate();
-    const handleClick = () => {
+  const navigate = useNavigate();
+  const { register, handleSubmit } = useForm();
 
-    }
-    const handleLogin = () => {
-        navigate('/login');
-    };
+  const handleClick = () => {
+   console.log("Clicked close button");
+   
+  };
 
-    const handleSignUp = () => {
-        navigate('/signup');
-    };
+  const onSubmit = (data: any) => {
+    console.log(data);
+    navigate('/login');
+  };
 
-    return (
-        <>
-            <div className='m-auto bg-white p-4 login-page'>
-                <Formik
-                    initialValues={{ email: "", password: "" }}
-                    onSubmit={(values) => {
-                        console.log(values);
-                    }}
-                >
-                    {({ errors, touched }) => (
+  const handleSignUp = () => {
+    navigate('/signup');
+  };
 
-                        <Form>
-                            <div className='d-flex justify-content-between'>
-                                <h1 className='modal-title'>Sign in</h1>
-                                <Button
-                                    styleType="secondary"
-                                    onClick={handleClick}
-                                    label={<CloseIcon />}
-                                    type="button"
-                                    style={{ background: "#F8F8F8", padding: "11px 15px" }}
-                                    disable={false}
-                                />
-                            </div>
-                            <div className="my-4">
-                                <Input
-                                    label="Email"
-                                    id="email"
-                                    name="email"
-                                    required={true}
-                                    place
-                                    placeHolder="E-mail"
-
-                                />
-                                {errors.email && touched.email && (
-                                    <span className="help is-danger">{errors.email}</span>
-                                )}
-                            </div>
-                            <div className="mb-4">
-                                <Input
-                                    label="Password"
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    required={true}
-                                    place
-                                    placeHolder="Password"
-                                />
-                                {errors.password && touched.password && (
-                                    <span className="help is-danger">{errors.password}</span>
-                                )}
-                            </div>
-                            <div className="mb-4 d-flex justify-content-between">
-                                <div className='d-flex'>
-                                    <input
-                                        type="checkbox"
-                                        className="CustomCheckbox"
-                                    />
-                                    <div className='font-14 mx-3'>Remember me</div>
-                                </div>
-                                <b className='cursor-pointer text-decoration-underline custom-blue-color'>Forgot your password?</b>
-                            </div>
-                            <div className='d-flex gap-3'>
-                                <Button
-                                    styleType="primary"
-                                    onClick={handleLogin}
-                                    label="Sign In"
-                                    type="submit"
-                                    style={{ width: '100%' }}
-                                    disable={false}
-                                />
-                                <Button
-                                    styleType="primary"
-                                    onClick={handleSignUp}
-                                    label="Sign Up"
-                                    style={{ width: '100%' }}
-                                    disable={false}
-                                />
-                            </div>
-                        </Form>
-
-                    )}
-                </Formik>
+  return (
+    <>
+      <div className='m-auto bg-white p-4 login-page'>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className='d-flex justify-content-between'>
+            <h1 className='modal-title'>Sign in</h1>
+            <Button
+              styleType="secondary"
+              onClick={handleClick}
+              label={<CloseIcon />}
+              type="button"
+              style={{ background: "#F8F8F8", padding: "11px 15px" }}
+              disable={false}
+            />
+          </div>
+          <div className="my-4">
+            <Input
+              label="Email"
+              id="email"
+              name="email"
+              type="text"
+              required={true}
+              place
+              placeHolder="E-mail"
+              register={register}
+            />
+          </div>
+          <div className="mb-4">
+            <Input
+              label="Password"
+              id="password"
+              name="password"
+              type="password"
+              required={true}
+              place
+              placeHolder="Password"
+              register={register}
+            />
+          </div>
+          <div className="mb-4 d-flex justify-content-between">
+            <div className='d-flex'>
+              <input
+                type="checkbox"
+                className="CustomCheckbox"
+                {...register('rememberMe')}
+              />
+              <div className='font-14 mx-3'>Remember me</div>
             </div>
-        </>
-    )
-}
+            <b className='cursor-pointer text-decoration-underline custom-blue-color'>Forgot your password?</b>
+          </div>
+          <div className='d-flex gap-3'>
+            <Button
+               onClick={onSubmit}
+              styleType="primary"
+              label="Sign In"
+              type="submit"
+              style={{ width: '100%' }}
+              disable={false}
+            />
+            <Button
+              styleType="primary"
+              onClick={handleSignUp}
+              label="Sign Up"
+              style={{ width: '100%' }}
+              disable={false}
+            />
+          </div>
+        </form>
+      </div>
+    </>
+  );
+};
 
-export default Login
+export default Login;
