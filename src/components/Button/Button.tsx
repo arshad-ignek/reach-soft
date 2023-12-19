@@ -10,7 +10,7 @@ interface ButtonProps {
   style?: React.CSSProperties;
   disable?: boolean;
   otherChild?: ReactNode;
-  onMouseOver?: MouseEventHandler<HTMLButtonElement>;
+  onMouseOver?: MouseEventHandler<HTMLButtonElement> ;
   onMouseOut?: MouseEventHandler<HTMLButtonElement>;
 }
 

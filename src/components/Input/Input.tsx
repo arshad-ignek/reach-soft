@@ -12,7 +12,6 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   placeHolder?: string;
   disable?: boolean;
   maxlength?: number;
-  props:any;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -26,8 +25,7 @@ const Input: React.FC<InputProps> = ({
   maxlength,
   ...props
 }) => {
-  // const [field, meta] = useField(props);
-
+  const [field, meta] = useField<any>(props?.name || "");
   return (
     <>
       <div
@@ -35,12 +33,12 @@ const Input: React.FC<InputProps> = ({
       >
         <input
           autoComplete="off"
-          // placeHolder={label}
+          placeholder={label}
           className={`form-control `}
-          // required={required ? "required" : undefined}
+          required={required ? true : undefined}
           disabled={disable}
           maxLength={maxlength}
-          // {...field}
+          {...field}
           {...props}
         />
         {place === true ? (
@@ -59,10 +57,11 @@ const Input: React.FC<InputProps> = ({
         )}
       </div>
 
-      {/* {meta.touched && meta.error ? (
+      {meta.touched && meta.error ? (
         <div className="is-danger">{meta.error}</div>
-      ) : null} */}
+      ) : null}
     </>
+
   );
 };
 
