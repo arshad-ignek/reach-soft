@@ -1,15 +1,11 @@
 import { Form, Formik } from 'formik';
 import Button from '../components/Button/Button';
 import { CloseIcon } from '../components/CustomIcon/CustomIcon';
-import { useNavigate } from 'react-router-dom';
 import Input from '../components/Input/Input';
+import { useNavigate } from 'react-router-dom';
 
-
-const Login = () => {
+const SignUp = () => {
     const navigate = useNavigate();
-    const handleClick = () => {
-
-    }
     const handleLogin = () => {
         navigate('/login');
     };
@@ -17,21 +13,24 @@ const Login = () => {
     const handleSignUp = () => {
         navigate('/signup');
     };
+    const handleClick = () => {
+
+    }
 
     return (
         <>
             <div className='m-auto bg-white p-4 login-page'>
                 <Formik
-                    initialValues={{ email: "", password: "" }}
+                    initialValues={{ email: "", createPassword: "" , confirmPassword: ""}}
                     onSubmit={(values) => {
                         console.log(values);
                     }}
                 >
-                    {({ errors, touched }) => (
+                    {({errors, touched }) => (
 
                         <Form>
                             <div className='d-flex justify-content-between'>
-                                <h1 className='modal-title'>Sign in</h1>
+                                <h1 className='modal-title'>Sign Up</h1>
                                 <Button
                                     styleType="secondary"
                                     onClick={handleClick}
@@ -57,39 +56,44 @@ const Login = () => {
                             </div>
                             <div className="mb-4">
                                 <Input
-                                    label="Password"
-                                    id="password"
-                                    name="password"
+                                    label="CreatePassword"
+                                    id="createPassword"
+                                    name="createPassword"
                                     type="password"
                                     required={true}
                                     place
-                                    placeHolder="Password"
+                                    placeHolder="Create Password"
                                 />
-                                {errors.password && touched.password && (
-                                    <span className="help is-danger">{errors.password}</span>
+                                {errors.createPassword && touched.createPassword && (
+                                    <span className="help is-danger">{errors.createPassword}</span>
                                 )}
                             </div>
-                            <div className="mb-4 d-flex justify-content-between">
-                                <div className='d-flex'>
-                                    <input
-                                        type="checkbox"
-                                        className="CustomCheckbox"
-                                    />
-                                    <div className='font-14 mx-3'>Remember me</div>
-                                </div>
-                                <b className='cursor-pointer text-decoration-underline custom-blue-color'>Forgot your password?</b>
+                            <div className="mb-4">
+                                <Input
+                                    label="ConfirmPassword"
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    type="password"
+                                    required={true}
+                                    place
+                                    placeHolder="Confirm Password"
+                                />
+                                {errors.confirmPassword && touched.confirmPassword && (
+                                    <span className="help is-danger">{errors.confirmPassword}</span>
+                                )}
                             </div>
+                           
                             <div className='d-flex gap-3'>
                                 <Button
                                     styleType="primary"
                                     onClick={handleLogin}
                                     label="Sign In"
-                                    type="submit"
                                     style={{ width: '100%' }}
                                     disable={false}
                                 />
                                 <Button
                                     styleType="primary"
+                                    type="submit"
                                     onClick={handleSignUp}
                                     label="Sign Up"
                                     style={{ width: '100%' }}
@@ -105,4 +109,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default SignUp

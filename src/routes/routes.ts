@@ -1,4 +1,5 @@
 import Login from "../Login/Login";
+import SignUp from "../SignUp/SignUp";
 
 const routes:{path: string, component:()=> JSX.Element} [] = [
     {
@@ -7,7 +8,7 @@ const routes:{path: string, component:()=> JSX.Element} [] = [
     },
     {
         path: '/signup',
-        component: Login
+        component: SignUp
     }
 ];
 
