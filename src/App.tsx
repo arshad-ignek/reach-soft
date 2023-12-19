@@ -1,4 +1,3 @@
-import Login from "./Login/Login";
 import routes from "./routes/routes";
 import {BrowserRouter, Route, Routes} from "react-router-dom"
 
