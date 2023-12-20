@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../components/Button/Button';
 import { CloseIcon } from '../components/CustomIcon/CustomIcon';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Input from '../components/Input/Input';
 
 const Login = () => {
@@ -22,6 +22,7 @@ const Login = () => {
   const handleSignUp = () => {
     navigate('/signup');
   };
+
 
   return (
     <>
@@ -71,7 +72,7 @@ const Login = () => {
               />
               <div className='font-14 mx-3'>Remember me</div>
             </div>
-            <b className='cursor-pointer text-decoration-underline custom-blue-color'>Forgot your password?</b>
+            <b className='cursor-pointer text-decoration-underline custom-blue-color'><Link to="/forgotPassword"> Forgot your password? </Link></b>
           </div>
           <div className='d-flex gap-3'>
             <Button
