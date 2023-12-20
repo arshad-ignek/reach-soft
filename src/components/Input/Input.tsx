@@ -7,6 +7,8 @@ interface InputProps {
   required?: boolean;
   isInvalid?: boolean;
   place?: boolean;
+  validate?: boolean;
+  password?: string;
   placeHolder?: string;
   disable?: boolean;
   maxlength?: number;
@@ -22,6 +24,8 @@ const Input: React.FC<InputProps> = ({
   isInvalid,
   place,
   placeHolder,
+  password,
+  validate,
   id,
   disable,
   maxlength,
@@ -40,7 +44,12 @@ const Input: React.FC<InputProps> = ({
           disabled={disable}
           maxLength={maxlength}
           type={type}
-          {...register(name, { required: required && `${label} is required` })}
+          {...register(name, { required: required && `${label} is required`, validate: (value) => {
+              if (password && name === 'passwordConfirm' && value !== password) {
+                return 'Passwords must match';
+              }
+              return true;
+            }})}
         />
         {place === true ? (
           <label className="floatLabel" htmlFor={id}>
@@ -60,3 +69,4 @@ const Input: React.FC<InputProps> = ({
 };
 
 export default Input;
+
