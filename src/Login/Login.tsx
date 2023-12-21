@@ -4,6 +4,7 @@ import { CloseIcon } from "../components/CustomIcon/CustomIcon";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../components/Input/Input";
 import { useApiMutation } from "../apis/useApi";
+import { toast } from "react-toastify";
 
 const Login = () => {
   interface ApiResponse {
@@ -13,7 +14,7 @@ const Login = () => {
   }
   const {
     mutate: signUpMutation,
-    data: data,
+    data,
     reset,
     isLoading,
     isError,
@@ -35,14 +36,29 @@ const Login = () => {
       console.error("Error during signup:", error);
     }
   };
+  
   // Check if there is an error in the response
   if (isError) {
+    toast.update(toast.loading("please wait ......"), {
+      render: 'Login failed. Please try again.',
+      type: "error",
+      isLoading: false,
+      autoClose: 2000,
+      closeButton: true
+    });
     console.error("Mutation error:", isError);
   } else if (isLoading) {
     return <p>Loading ...</p>;
   } else if (data) {
     // Check the data and perform actions accordingly
     if (data.message === "login succefull") {
+      toast.update(toast.loading("please wait ......"), {
+        render: 'Login successful!',
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+        closeButton: true
+      });
       localStorage.setItem("token", data.token);
       reset();
     }
@@ -95,7 +111,7 @@ const Login = () => {
               <input
                 type="checkbox"
                 className="CustomCheckbox"
-                // {...register('rememberMe')}
+              // {...register('rememberMe')}
               />
               <div className="font-14 mx-3">Remember me</div>
             </div>

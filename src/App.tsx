@@ -1,3 +1,4 @@
+import ToastContainerWrapper from "./components/StatusPopup/StatusPopup";
 import routes from "./routes/routes";
 import {BrowserRouter, Route, Routes} from "react-router-dom"
 
@@ -16,6 +17,7 @@ function App() {
         ))}
       </Routes>
       </BrowserRouter>
+      <ToastContainerWrapper />
     </div>
   );
 }
