@@ -1,13 +1,12 @@
 
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError,AxiosHeaders } from 'axios';
 
 const api = axios.create({
   baseURL: 'http://localhost:8080',
   withCredentials: false,
  headers:{
     'Accept': 'application/json',
-    // 'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json'
  
  }
@@ -20,6 +19,24 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+api.interceptors.request.use(
+  (config)=>{
+    const token = localStorage.getItem('token');
+    config.headers = config.headers ?? {} as AxiosHeaders;
+    // Check if the request is for login or forgot password
+    if (config?.url?.includes('/login') || config?.url?.includes('/forgot-password')) {
+      // Exclude token for login or forgot password requests
+      return config;
+    }
+    // for other requests use token from config in authentication
+    if(token){
+     
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  }
+)
 
 export function useApiQuery<T>(key: string, endpoint: string) {
   return useQuery<T>(key, () => api.get(endpoint).then((res) => res.data));
