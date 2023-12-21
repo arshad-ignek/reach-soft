@@ -4,8 +4,11 @@ import Button from '../components/Button/Button';
 import { CloseIcon } from '../components/CustomIcon/CustomIcon';
 import { Link, useNavigate } from 'react-router-dom';
 import Input from '../components/Input/Input';
+import { useApiMutation } from '../apis/useApi';
 
 const Login = () => {
+  const { mutate: signUpMutation, data: data, isLoading, isError } = useApiMutation('login');
+  console.log(data);
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
 
@@ -14,10 +17,19 @@ const Login = () => {
    
   };
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-    navigate('/login');
-  };
+
+
+   const onSubmit = async (formData: any) => {
+    console.log(formData,"formData");
+        try {
+            console.log('hiiii ---------------------------');
+            // Call the signUpMutation function with the form data
+            const response = await signUpMutation(JSON.stringify(formData));
+            console.log(response);
+          } catch (error) {
+            console.error('Error during signup:', error);
+        }
+    };
 
   const handleSignUp = () => {
     navigate('/signup');
@@ -41,13 +53,13 @@ const Login = () => {
           </div>
           <div className="my-4">
             <Input
-              label="Email"
-              id="email"
-              name="email"
+              label="Username"
+              id="username"
+              name="username"
               type="text"
               required={true}
               place
-              placeHolder="E-mail"
+              placeHolder="Username"
               register={register}
             />
           </div>
@@ -65,11 +77,11 @@ const Login = () => {
           </div>
           <div className="mb-4 d-flex justify-content-between">
             <div className='d-flex'>
-              <input
+              {/* <input
                 type="checkbox"
                 className="CustomCheckbox"
                 {...register('rememberMe')}
-              />
+              /> */}
               <div className='font-14 mx-3'>Remember me</div>
             </div>
             <b className='cursor-pointer text-decoration-underline custom-blue-color'><Link to="/forgotPassword"> Forgot your password? </Link></b>

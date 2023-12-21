@@ -4,7 +4,7 @@ import './Button.css';
 interface ButtonProps {
   styleType: string;
   otherClass?: string;
-  onClick: MouseEventHandler<HTMLButtonElement>;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
   label: any;
   type?: 'button' | 'submit' | 'reset';
   style?: React.CSSProperties;
