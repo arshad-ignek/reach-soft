@@ -39,14 +39,14 @@ api.interceptors.request.use(
 )
 
 export function useApiQuery<T>(key: string, endpoint: string) {
-  return useQuery<T>(key, () => api.get(endpoint).then((res) => res.data));
+  return useQuery<T>(key, async() =>await api.get(endpoint).then((res) => res.data));
 }
 
 export function useApiMutation<T, U>(endpoint: string) {
     const queryClient = useQueryClient();
   
     return useMutation<T, AxiosError, U>(
-    (data) => api.post(endpoint, data).then((res)=>(res.data)),
+    async(data) => await api.post(endpoint, data).then((res)=>(res.data)),
  
       {
         onSuccess: () => {
