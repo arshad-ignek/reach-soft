@@ -5,6 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Input from "../components/Input/Input";
 import { useApiMutation } from "../apis/useApi";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
+import { useApiQuery } from "../apis/useApi";
 
 const Login = () => {
   interface ApiResponse {
@@ -15,52 +17,51 @@ const Login = () => {
   const {
     mutate: signUpMutation,
     data,
-    reset,
-    isLoading,
     isError,
   } = useApiMutation<ApiResponse, string>("login");
 
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
 
   const handleClick = () => {
     console.log("Clicked close button");
   };
 
-  const onSubmit = async (formData: any) => {
+  const captchaQuery = useApiQuery<string>('captcha', 'captcha');
+
+  useEffect(() => {
+    captchaQuery.refetch();
+  }, []);
+
+
+  const onSubmit = (formData: any) => {
     console.log(formData, "formData");
     try {
-      // Call the signUpMutation function with the form data
-      await signUpMutation(JSON.stringify(formData));
+      signUpMutation(JSON.stringify(formData));
     } catch (error) {
       console.error("Error during signup:", error);
     }
   };
-  
-  // Check if there is an error in the response
-  if (isError) {
-    toast.update(toast.loading("please wait ......"), {
-      render: 'Login failed. Please try again.',
-      type: "error",
+
+  if (data && data.message === "login successful") {
+    toast.update(toast.loading("Loading ..."), {
+      render: "Login successfull!",
+      type: "success",
       isLoading: false,
       autoClose: 2000,
       closeButton: true
     });
-    console.error("Mutation error:", isError);
-  } else if (isLoading) {
-    return <p>Loading ...</p>;
-  } else if (data) {
-    // Check the data and perform actions accordingly
-    if (data.message === "login succefull") {
-      toast.update(toast.loading("please wait ......"), {
-        render: 'Login successful!',
-        type: "success",
+    localStorage.setItem("token", data.token);
+    reset();
+  } else {
+    if (isError) {
+      toast.update(toast.loading("Loading ..."), {
+        render: "Login Failed!",
+        type: "error",
         isLoading: false,
         autoClose: 2000,
         closeButton: true
       });
-      localStorage.setItem("token", data.token);
-      reset();
     }
   }
   const handleSignUp = () => {
@@ -94,6 +95,7 @@ const Login = () => {
               register={register}
             />
           </div>
+
           <div className="mb-4">
             <Input
               label="Password"
@@ -106,6 +108,25 @@ const Login = () => {
               register={register}
             />
           </div>
+          {captchaQuery.data && (
+            <>
+              <div className="mb-4">
+                <img src={`data:image/svg+xml,${encodeURIComponent(captchaQuery.data)}`} alt="Captcha" />
+              </div>
+              <div className="mb-4">
+                <Input
+                  label="Captcha"
+                  id="captcha"
+                  name="captcha"
+                  type="text"
+                  required={true}
+                  place
+                  placeHolder="Captcha"
+                  register={register}
+                />
+              </div>
+            </>
+          )}
           <div className="mb-4 d-flex justify-content-between">
             <div className="d-flex">
               <input
