@@ -31,8 +31,7 @@ const Login = () => {
   const onSubmit = async(formData: any) => {
     console.log(formData, "formData");
     try {
-      // Call the signUpMutation function with the form data
-      await signUpMutation(JSON.stringify(formData));
+      signUpMutation(JSON.stringify(formData));
     } catch (error) {
       console.error("Error during signup:", error);
       if (isError) {
@@ -125,6 +124,7 @@ const Login = () => {
               register={register}
             />
           </div>
+
           <div className="mb-4">
             <Input
               label="Password"
