@@ -5,8 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Input from "../components/Input/Input";
 import { useApiMutation } from "../apis/useApi";
 import { toast } from "react-toastify";
-import { useEffect } from "react";
-import { useApiQuery } from "../apis/useApi";
+import { useEffect, useState } from "react";
 
 const Login = () => {
   interface ApiResponse {
@@ -17,53 +16,83 @@ const Login = () => {
   const {
     mutate: signUpMutation,
     data,
+    isLoading,
     isError,
   } = useApiMutation<ApiResponse, string>("login");
 
   const navigate = useNavigate();
   const { register, handleSubmit, reset } = useForm();
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   const handleClick = () => {
     console.log("Clicked close button");
   };
-
-  const captchaQuery = useApiQuery<string>('captcha', 'captcha');
-
-  useEffect(() => {
-    captchaQuery.refetch();
-  }, []);
-
-
-  const onSubmit = (formData: any) => {
+ 
+  const onSubmit = async(formData: any) => {
     console.log(formData, "formData");
     try {
       signUpMutation(JSON.stringify(formData));
     } catch (error) {
       console.error("Error during signup:", error);
+      if (isError) {
+        toast.update(toast.loading("Loading ..."), {
+          render: "Login Failed!",
+          type: "error",
+          isLoading: false,
+          autoClose: 2000,
+          closeButton: true,
+        });
+      }
     }
   };
 
-  if (data && data.message === "login successful") {
-    toast.update(toast.loading("Loading ..."), {
-      render: "Login successfull!",
-      type: "success",
-      isLoading: false,
-      autoClose: 2000,
-      closeButton: true
-    });
-    localStorage.setItem("token", data.token);
-    reset();
-  } else {
-    if (isError) {
+  const fetchCaptchaImage = async () => {
+    try {
+      const response = await fetch(
+        "http://192.168.29.155:8080/generate-captcha"
+      );
+      if (response.ok) {
+        const imageData = await response.arrayBuffer();
+        const imageUrl = URL.createObjectURL(new Blob([imageData]));
+        setImageSrc(imageUrl);
+      } else {
+        console.error("Failed to fetch captcha image");
+      }
+    } catch (error) {
+      console.error("Error fetching captcha image:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch the captcha image when the component mounts
+    fetchCaptchaImage();
+  }, []);
+
+  
+
+  useEffect(() => {
+    if (data && data.message) {
+      toast.update(toast.loading("Loading ..."), {
+        render:data.message,
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+        closeButton: true,
+      });
+      localStorage.setItem("token", data.token);
+      reset();
+    } else if (isError) {
       toast.update(toast.loading("Loading ..."), {
         render: "Login Failed!",
         type: "error",
         isLoading: false,
         autoClose: 2000,
-        closeButton: true
+        closeButton: true,
       });
+      
     }
-  }
+  }, [data]);
+
   const handleSignUp = () => {
     navigate("/signup");
   };
@@ -108,11 +137,12 @@ const Login = () => {
               register={register}
             />
           </div>
-          {captchaQuery.data && (
+          {imageSrc && (
             <>
               <div className="mb-4">
-                <img src={`data:image/svg+xml,${encodeURIComponent(captchaQuery.data)}`} alt="Captcha" />
+                <img src={`${imageSrc}`} alt="Captcha" />
               </div>
+
               <div className="mb-4">
                 <Input
                   label="Captcha"
@@ -132,7 +162,7 @@ const Login = () => {
               <input
                 type="checkbox"
                 className="CustomCheckbox"
-              // {...register('rememberMe')}
+                // {...register('rememberMe')}
               />
               <div className="font-14 mx-3">Remember me</div>
             </div>

@@ -5,54 +5,39 @@ import Input from "../components/Input/Input";
 import { useApiMutation } from "../apis/useApi";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
-import { useContext } from "react";
-import ContectContext, {ContectContextProps} from "../globalContext/GlobalContext";
+import { useContext, useEffect } from "react";
+import ContectContext, {
+  ContectContextProps,
+} from "../globalContext/GlobalContext";
 
 const ForgotPassword = () => {
-    const {setContectData} = useContext(ContectContext) as ContectContextProps
+  const { setContactData } = useContext(ContectContext) as ContectContextProps;
   interface ApiResponse {
     data: string;
     message: string;
   }
- 
+
   const {
     mutate: forgotMutation,
     data,
     isError,
   } = useApiMutation<ApiResponse, string>("generate-otp");
+  
   const navigate = useNavigate();
   const { register, handleSubmit, reset } = useForm();
+
   const handleClick = () => {
     console.log("Clicked close button");
   };
   const onSubmit = async (formData: any) => {
     console.log(formData, "formData");
-setContectData({...formData})
+    setContactData({ ...formData });
     try {
       // Call the signUpMutation function with the form data
       await forgotMutation(JSON.stringify(formData));
-      console.log(data);
-      // Check if there is an error in the response
-      if (data) {
-        // Check the data and perform actions accordingly
-        toast.update(toast.loading("please wait ......"), {
-            render: 'Login successful!',
-            type: "success",
-            isLoading: false,
-            autoClose: 2000,
-            closeButton: true
-          });
-        console.log(data);
-        if (data?.data) {
-          reset();
-          console.log(data.data);
-          navigate("/createPassword")
-        }
-      }
     } catch (error) {
       console.error("Error during signup:", error);
-      if (isError) {
-        reset();
+     
         toast.update(toast.loading("please wait ......"), {
           render: isError,
           type: "error",
@@ -60,9 +45,31 @@ setContectData({...formData})
           autoClose: 2000,
           closeButton: true,
         });
-      }
+      
     }
   };
+
+  useEffect(() => {
+    // Check if there is an error in the response
+    if (data) {
+      // Check the data and perform actions accordingly
+      toast.update(toast.loading("please wait ......"), {
+        render: data.message,
+        type: "success",
+        isLoading: false,
+        autoClose: 2000,
+        closeButton: true,
+      });
+      console.log(data);
+      if (data?.data) {
+        reset();
+        console.log(data.data);
+        navigate("/otp");
+      }
+    }
+    
+  }, [data]);
+
   return (
     <>
       <div className="m-auto bg-white p-4 login-page">

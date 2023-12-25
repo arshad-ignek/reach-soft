@@ -45,7 +45,7 @@ const Input: React.FC<InputProps> = ({
           maxLength={maxlength}
           type={type}
           {...register(name, { required: required && `${label} is required`, validate: (value) => {
-              if (password && name === 'confirmPassword' && value !== password) {
+              if (password && name === 'reEnterPassword' && value !== password) {
                 return 'Passwords must match';
               }
               return true;
