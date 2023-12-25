@@ -5,6 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import Input from "../components/Input/Input";
 import { useApiMutation } from "../apis/useApi";
 import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
+import { useApiQuery } from "../apis/useApi";
 
 const Login = () => {
   interface ApiResponse {
@@ -15,54 +17,87 @@ const Login = () => {
   const {
     mutate: signUpMutation,
     data,
-    reset,
     isLoading,
     isError,
   } = useApiMutation<ApiResponse, string>("login");
 
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   const handleClick = () => {
     console.log("Clicked close button");
   };
 
-  const onSubmit = async (formData: any) => {
+  const captchaQuery = useApiQuery<Blob>("captcha", "generate-captcha");
+ 
+
+  const onSubmit = async(formData: any) => {
     console.log(formData, "formData");
     try {
       // Call the signUpMutation function with the form data
       await signUpMutation(JSON.stringify(formData));
     } catch (error) {
       console.error("Error during signup:", error);
+      if (isError) {
+        toast.update(toast.loading("Loading ..."), {
+          render: "Login Failed!",
+          type: "error",
+          isLoading: false,
+          autoClose: 2000,
+          closeButton: true,
+        });
+      }
     }
   };
+
+  const fetchCaptchaImage = async () => {
+    try {
+      const response = await fetch(
+        "http://192.168.29.155:8080/generate-captcha"
+      );
+      if (response.ok) {
+        const imageData = await response.arrayBuffer();
+        const imageUrl = URL.createObjectURL(new Blob([imageData]));
+        setImageSrc(imageUrl);
+      } else {
+        console.error("Failed to fetch captcha image");
+      }
+    } catch (error) {
+      console.error("Error fetching captcha image:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch the captcha image when the component mounts
+    fetchCaptchaImage();
+  }, []);
+
   
-  // Check if there is an error in the response
-  if (isError) {
-    toast.update(toast.loading("please wait ......"), {
-      render: 'Login failed. Please try again.',
-      type: "error",
-      isLoading: false,
-      autoClose: 2000,
-      closeButton: true
-    });
-    console.error("Mutation error:", isError);
-  } else if (isLoading) {
-    return <p>Loading ...</p>;
-  } else if (data) {
-    // Check the data and perform actions accordingly
-    if (data.message === "login succefull") {
-      toast.update(toast.loading("please wait ......"), {
-        render: 'Login successful!',
+
+  useEffect(() => {
+    if (data && data.message) {
+      toast.update(toast.loading("Loading ..."), {
+        render:data.message,
         type: "success",
         isLoading: false,
         autoClose: 2000,
-        closeButton: true
+        closeButton: true,
       });
       localStorage.setItem("token", data.token);
       reset();
+    } else if (isError) {
+      toast.update(toast.loading("Loading ..."), {
+        render: "Login Failed!",
+        type: "error",
+        isLoading: false,
+        autoClose: 2000,
+        closeButton: true,
+      });
+      
     }
-  }
+  }, [data]);
+
   const handleSignUp = () => {
     navigate("/signup");
   };
@@ -106,12 +141,32 @@ const Login = () => {
               register={register}
             />
           </div>
+          {captchaQuery.data && (
+            <>
+              <div className="mb-4">
+                <img src={`${imageSrc}`} alt="Captcha" />
+              </div>
+
+              <div className="mb-4">
+                <Input
+                  label="Captcha"
+                  id="captcha"
+                  name="captcha"
+                  type="text"
+                  required={true}
+                  place
+                  placeHolder="Captcha"
+                  register={register}
+                />
+              </div>
+            </>
+          )}
           <div className="mb-4 d-flex justify-content-between">
             <div className="d-flex">
               <input
                 type="checkbox"
                 className="CustomCheckbox"
-              // {...register('rememberMe')}
+                // {...register('rememberMe')}
               />
               <div className="font-14 mx-3">Remember me</div>
             </div>

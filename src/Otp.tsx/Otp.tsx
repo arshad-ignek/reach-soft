@@ -2,42 +2,40 @@ import { useForm } from "react-hook-form";
 import Button from "../components/Button/Button";
 import { CloseIcon } from "../components/CustomIcon/CustomIcon";
 import Input from "../components/Input/Input";
+import { useNavigate } from "react-router-dom";
 import { useApiMutation } from "../apis/useApi";
-import { useNavigate } from "react-router";
-import { toast } from "react-toastify";
 import { useContext, useEffect } from "react";
 import ContectContext, {
   ContectContextProps,
 } from "../globalContext/GlobalContext";
+import { toast } from "react-toastify";
 
-const ForgotPassword = () => {
-  const { setContactData } = useContext(ContectContext) as ContectContextProps;
+const Otp = () => {
+  const navigate = useNavigate();
+  const { setContactData,ContactData } = useContext(ContectContext) as ContectContextProps;
   interface ApiResponse {
     data: string;
     message: string;
   }
 
   const {
-    mutate: forgotMutation,
+    mutate: otpMutation,
     data,
     isError,
-  } = useApiMutation<ApiResponse, string>("generate-otp");
-  
-  const navigate = useNavigate();
-  const { register, handleSubmit, reset } = useForm();
+  } = useApiMutation<ApiResponse, string>("otp-verify");
 
-  const handleClick = () => {
-    console.log("Clicked close button");
-  };
-  const onSubmit = async (formData: any) => {
-    console.log(formData, "formData");
-    setContactData({ ...formData });
+  const { register, handleSubmit, reset,getValues } = useForm();
+
+  const onSubmit = async () => {
+    const formData = getValues();
+        const combinedData = { ...ContactData, ...formData };
+        console.log(combinedData);
     try {
       // Call the signUpMutation function with the form data
-      await forgotMutation(JSON.stringify(formData));
+      await otpMutation(JSON.stringify(combinedData));
     } catch (error) {
       console.error("Error during signup:", error);
-     
+      if (isError) {
         toast.update(toast.loading("please wait ......"), {
           render: isError,
           type: "error",
@@ -45,7 +43,7 @@ const ForgotPassword = () => {
           autoClose: 2000,
           closeButton: true,
         });
-      
+      }
     }
   };
 
@@ -61,21 +59,22 @@ const ForgotPassword = () => {
         closeButton: true,
       });
       console.log(data);
-      if (data?.data) {
-        reset();
-        console.log(data.data);
-        navigate("/otp");
-      }
+
+      reset();
+      navigate("/createPassword")
     }
-    
   }, [data]);
+
+  const handleClick = () => {
+    console.log("Clicked close button");
+  };
 
   return (
     <>
       <div className="m-auto bg-white p-4 login-page">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="d-flex justify-content-between">
-            <h1 className="modal-title">Password</h1>
+            <h1 className="modal-title">OTP</h1>
             <Button
               styleType="secondary"
               onClick={handleClick}
@@ -86,29 +85,24 @@ const ForgotPassword = () => {
             />
           </div>
           <div className="my-4">
-            <p className="small">
-              Specify the email where to send the link to reset the password
-            </p>
-          </div>
-          <div className="my-4">
             <Input
-              label="Contact Number"
-              id="contact"
+              label="OTP"
+              id="otp"
               type="number"
-              name="contact"
+              name="otp"
               required={true}
               place
-              placeHolder="Contact Number"
+              placeHolder="OTP"
               register={register}
             />
           </div>
 
           <div className="d-flex gap-3">
             <Button
-              styleType="primary"
               onClick={onSubmit}
-              label="Reset The Password"
+              styleType="primary"
               type="submit"
+              label="Confirm OTP"
               style={{ width: "100%" }}
               disable={false}
             />
@@ -118,4 +112,5 @@ const ForgotPassword = () => {
     </>
   );
 };
-export default ForgotPassword;
+
+export default Otp;

@@ -2,10 +2,10 @@ import { useState,ReactNode } from "react";
 import ContectContext from "./GlobalContext"
 
 const ContextProvider: React.FC<{children:ReactNode}> = ({children})=>{
-    const [ContectData, setContectData] = useState("");
-
+    const [ContactData, setContactData] = useState({});
+    console.log(ContactData,"ContactData")
   return (
-    <ContectContext.Provider value={{ ContectData, setContectData }}>
+    <ContectContext.Provider value={{ ContactData, setContactData }}>
       {children}
     </ContectContext.Provider>
   );

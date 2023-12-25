@@ -1,8 +1,8 @@
 import React, { createContext, Dispatch, SetStateAction } from 'react';
 
 export interface ContectContextProps {
-    ContectData: string;
-    setContectData: Dispatch<SetStateAction<string>>;
+    ContactData: {};
+    setContactData: Dispatch<SetStateAction<string>>;
 }
 
 const ContectContext = createContext<ContectContextProps | undefined>(undefined);
