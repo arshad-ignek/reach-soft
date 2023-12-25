@@ -6,7 +6,6 @@ import Input from "../components/Input/Input";
 import { useApiMutation } from "../apis/useApi";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
-import { useApiQuery } from "../apis/useApi";
 
 const Login = () => {
   interface ApiResponse {
@@ -28,10 +27,7 @@ const Login = () => {
   const handleClick = () => {
     console.log("Clicked close button");
   };
-
-  const captchaQuery = useApiQuery<Blob>("captcha", "generate-captcha");
  
-
   const onSubmit = async(formData: any) => {
     console.log(formData, "formData");
     try {
@@ -141,7 +137,7 @@ const Login = () => {
               register={register}
             />
           </div>
-          {captchaQuery.data && (
+          {imageSrc && (
             <>
               <div className="mb-4">
                 <img src={`${imageSrc}`} alt="Captcha" />
